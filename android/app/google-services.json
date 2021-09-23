@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "675537872206",
+    "project_id": "productivity-app-daf7a",
+    "storage_bucket": "productivity-app-daf7a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675537872206:android:914638a2692ed937846a1f",
+        "android_client_info": {
+          "package_name": "com.artopher.productivity_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "675537872206-8m9rvgrb779dingfo7po0q8me4ub86h0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.artopher.productivity_app",
+            "certificate_hash": "44704ba31d5e3a064024b6737a819fd51f054797"
+          }
+        },
+        {
+          "client_id": "675537872206-umpelt3ctc8in8m5pahqj53fbflalhuk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_x24wwPuINgzDWEh6zijhP3YM5BYCyW0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "675537872206-umpelt3ctc8in8m5pahqj53fbflalhuk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
