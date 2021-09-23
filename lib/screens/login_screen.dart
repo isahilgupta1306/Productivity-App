@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:productivity_app/auth/authentication_services.dart';
+import 'package:productivity_app/screens/home_screen.dart';
 import 'package:productivity_app/screens/signup_screen.dart';
 import 'package:provider/src/provider.dart';
 
@@ -175,10 +176,20 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                 ),
               ),
-              onPressed: () {
-                context.read<AuthenticationService>().login(
-                    email: _emailAddressConttroller.text.trim(),
-                    password: _passwordController.text.trim());
+              onPressed: () async {
+                String? status = await context
+                    .read<AuthenticationService>()
+                    .login(
+                        email: _emailAddressConttroller.text.trim(),
+                        password: _passwordController.text.trim());
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(status!)),
+                );
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => const HomeScreen(),
+                  ),
+                );
               },
               child: const Text('Login'),
             ),
