@@ -14,6 +14,7 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
+          decoration: BoxDecoration(color: Colors.white.withOpacity(.01)),
           height: deviceSize.height,
           width: deviceSize.width,
           child: Column(
@@ -95,36 +96,54 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+    // ignore: avoid_unnecessary_containers
     return Container(
-      decoration: BoxDecoration(color: Colors.white38),
+      // decoration: const BoxDecoration(color: Colors.white38),
       child: Column(
         children: [
           SizedBox(
             width: deviceSize.width * 0.87,
-            child: TextFormField(
-              decoration: const InputDecoration(
-                prefixIcon: Icon(
-                  Icons.email_outlined,
-                ),
-                labelText: 'E-Mail',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(28),
+            child: Container(
+              decoration: BoxDecoration(boxShadow: [
+                // BoxShadow(
+                //   color: Colors.grey.withOpacity(0.5),
+                //   spreadRadius: 3,
+                //   blurRadius: 4,
+                //   offset: const Offset(0, 2), // changes position of shadow
+                // ),
+              ], color: Colors.white, borderRadius: BorderRadius.circular(28)),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(
+                    Icons.email_outlined,
                   ),
-                  // borderSide: BorderSide(color: Colors.purple),
+                  hintText: 'E-Mail',
+                  border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(28),
+                    ),
+                    borderSide: BorderSide(width: 0),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(28),
+                    ),
+                    borderSide: BorderSide(
+                        width: 1, color: Theme.of(context).primaryColor),
+                  ),
                 ),
+                keyboardType: TextInputType.emailAddress,
+                autofillHints: const [AutofillHints.email],
+                validator: (String? value) {
+                  if (value == null || !value.contains('@')) {
+                    return "Enter Valid Email Address";
+                  }
+                },
+                controller: _emailAddressConttroller,
+                onSaved: (value) {
+                  //function
+                },
               ),
-              keyboardType: TextInputType.emailAddress,
-              autofillHints: const [AutofillHints.email],
-              validator: (String? value) {
-                if (value == null || !value.contains('@')) {
-                  return "Enter Valid Email Address";
-                }
-              },
-              controller: _emailAddressConttroller,
-              onSaved: (value) {
-                //function
-              },
             ),
           ),
           const SizedBox(
@@ -132,34 +151,51 @@ class _LoginFormState extends State<LoginForm> {
           ),
           SizedBox(
             width: deviceSize.width * 0.87,
-            child: TextFormField(
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.lock_outline),
-                labelText: 'Password',
-                border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(28),
+            child: Container(
+              decoration: BoxDecoration(boxShadow: [
+                // BoxShadow(
+                //   color: Colors.grey.withOpacity(0.5),
+                //   spreadRadius: 3,
+                //   blurRadius: 4,
+                //   offset: const Offset(0, 2), // changes position of shadow
+                // ),
+              ], color: Colors.white, borderRadius: BorderRadius.circular(28)),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.lock_outline),
+                  hintText: 'Password',
+                  border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(28),
+                    ),
+                    borderSide: BorderSide(width: 0),
                   ),
-                  borderSide: BorderSide(color: Colors.purple),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(28),
+                    ),
+                    borderSide: BorderSide(
+                        width: 1, color: Theme.of(context).primaryColor),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: _obscureText
+                        ? const Icon(Icons.visibility)
+                        : const Icon(Icons.visibility_off),
+                    onPressed: _toggle,
+                  ),
                 ),
-                suffixIcon: IconButton(
-                  icon: _obscureText
-                      ? const Icon(Icons.visibility)
-                      : const Icon(Icons.visibility_off),
-                  onPressed: _toggle,
-                ),
+                obscureText: _obscureText,
+                controller: _passwordController,
+                validator: (value) {
+                  if (value == null || value.length < 5) {
+                    return 'Password is too short!';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  //
+                },
               ),
-              obscureText: _obscureText,
-              controller: _passwordController,
-              validator: (value) {
-                if (value == null || value.length < 5) {
-                  return 'Password is too short!';
-                }
-                return null;
-              },
-              onSaved: (value) {
-                //
-              },
             ),
           ),
           const SizedBox(
