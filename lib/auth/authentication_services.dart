@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthenticationService {
@@ -35,5 +36,19 @@ class AuthenticationService {
 
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
+  }
+
+  Future<void> userDetails(String displayName) async {
+    CollectionReference users = FirebaseFirestore.instance.collection('Users');
+    String? uid = _firebaseAuth.currentUser?.uid;
+    String? email = _firebaseAuth.currentUser?.email;
+    if (uid != null) {
+      var obj = users.add({
+        'displayName': displayName,
+        'uid': uid,
+        'emailAddress': email,
+        'provider': 'byEmail'
+      });
+    }
   }
 }

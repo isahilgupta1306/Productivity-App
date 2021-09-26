@@ -14,7 +14,8 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          decoration: BoxDecoration(color: Colors.white.withOpacity(.01)),
+          decoration:
+              const BoxDecoration(color: Color.fromRGBO(244, 244, 244, 100)),
           height: deviceSize.height,
           width: deviceSize.width,
           child: Column(
@@ -104,7 +105,7 @@ class _LoginFormState extends State<LoginForm> {
           SizedBox(
             width: deviceSize.width * 0.87,
             child: Container(
-              decoration: BoxDecoration(boxShadow: [
+              decoration: BoxDecoration(boxShadow: const [
                 // BoxShadow(
                 //   color: Colors.grey.withOpacity(0.5),
                 //   spreadRadius: 3,

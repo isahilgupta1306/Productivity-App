@@ -13,7 +13,7 @@ class EmailVerificationScreen extends StatefulWidget {
 
 class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   final _auth = FirebaseAuth.instance;
-  late User user;
+  User? user;
   late Timer timer;
 
   @override
@@ -26,8 +26,10 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    user = _auth.currentUser!;
-    user.sendEmailVerification();
+    user = _auth.currentUser;
+    if (user != null) {
+      user?.sendEmailVerification();
+    }
 
     timer = Timer.periodic(const Duration(seconds: 3), (timer) {
       checkEmailVerified();
@@ -37,23 +39,34 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
   Future<void> checkEmailVerified() async {
     Timer delayTimer;
-    user = _auth.currentUser!;
-    await user.reload();
-    if (user.emailVerified) {
-      timer.cancel();
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Your Email is Verified")));
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const LoginScreen()));
+    try {
+      user = _auth.currentUser;
+      if (user != null) {
+        await user?.reload();
+        if (user!.emailVerified) {
+          timer.cancel();
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Your Email is Verified")));
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const LoginScreen()));
+        }
+      }
+    } on FirebaseAuthException catch (e) {
+      print(e.code);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    String userEmail = user.email!;
+    String? userEmail;
+    if (user != null) {
+      userEmail = user?.email;
+    } else {
+      userEmail = 'Email Already in Use';
+    }
     return Scaffold(
       body: Center(
-        child: Text('Email sent to $userEmail'),
+        child: Text('Email sent to : $userEmail'),
       ),
     );
   }
