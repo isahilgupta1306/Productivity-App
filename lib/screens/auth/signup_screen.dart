@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:productivity_app/auth/authentication_services.dart';
-import 'package:productivity_app/screens/email_verification.dart';
-import 'package:productivity_app/screens/login_screen.dart';
+import 'package:productivity_app/screens/auth/email_verification.dart';
+import 'package:productivity_app/screens/auth/login_screen.dart';
 import 'package:provider/provider.dart';
 
 class SignupScreen extends StatelessWidget {

@@ -31,7 +31,7 @@ class _AddNoteState extends State<AddNote> {
 
     //
 
-    // Navigator.pop(context);
+    Navigator.pop(context);
   }
 
   @override
@@ -44,12 +44,12 @@ class _AddNoteState extends State<AddNote> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               IconButton(
-                icon: Icon(Icons.menu),
+                icon: Icon(Icons.more_vert_outlined),
                 onPressed: () {},
               ),
-              Text('Sample'),
+              Text('Save your Note'),
               IconButton(
-                icon: Icon(Icons.search),
+                icon: Icon(Icons.save_alt_outlined),
                 onPressed: _add,
               ),
             ],
@@ -57,7 +57,7 @@ class _AddNoteState extends State<AddNote> {
         ),
         appBar: AppBar(
           actions: [
-            IconButton(onPressed: _add, icon: Icon(Icons.arrow_back_ios_new))
+            IconButton(onPressed: () {}, icon: Icon(Icons.share_outlined)),
           ],
           iconTheme: IconThemeData(
             color: Theme.of(context).primaryColor, //change your color here
@@ -71,24 +71,26 @@ class _AddNoteState extends State<AddNote> {
             child: Column(
               children: [
                 Form(
-                    child: Column(
-                  children: [
-                    TextFormField(
-                      controller: titleController,
-                      decoration: InputDecoration.collapsed(hintText: 'Title'),
-                      style: TextStyle(fontSize: 22),
-                      maxLines: 2,
-                    ),
-                    TextFormField(
-                      controller: descriptionController,
-                      decoration:
-                          InputDecoration.collapsed(hintText: 'Description'),
-                      style: TextStyle(fontSize: 16),
-                      maxLines: 35,
-                      textInputAction: TextInputAction.newline,
-                    )
-                  ],
-                ))
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: titleController,
+                        decoration:
+                            InputDecoration.collapsed(hintText: 'Title'),
+                        style: TextStyle(fontSize: 22),
+                        maxLines: 2,
+                      ),
+                      TextFormField(
+                        controller: descriptionController,
+                        decoration:
+                            InputDecoration.collapsed(hintText: 'Description'),
+                        style: TextStyle(fontSize: 16),
+                        maxLines: 35,
+                        textInputAction: TextInputAction.newline,
+                      )
+                    ],
+                  ),
+                )
               ],
             ),
           ),

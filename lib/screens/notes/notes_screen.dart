@@ -84,15 +84,15 @@ class _NotesScreenState extends State<NotesScreen> {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(left: 14, right: 14),
+              margin: const EdgeInsets.only(left: 14, right: 14),
               height: deviceSize.height * 0.78,
               child: FutureBuilder<QuerySnapshot>(
                 future: ref.get(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return StaggeredGridView.countBuilder(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
+                        crossAxisCount: 2, //for column
+                        crossAxisSpacing: 12,
                         mainAxisSpacing: 12,
                         itemCount: snapshot.data?.docs.length,
                         itemBuilder: (context, index) {
@@ -103,49 +103,60 @@ class _NotesScreenState extends State<NotesScreen> {
                               notesData["description"].toString();
                           return InkWell(
                             splashColor: white,
-                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(15)),
                             onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => ViewNote(
-                                      snapshot.data!.docs[index].reference,
-                                      notesData)));
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(
+                                      builder: (_) => ViewNote(
+                                          snapshot.data!.docs[index].reference,
+                                          notesData)))
+                                  .then((value) {
+                                setState(() {});
+                              });
                             },
                             child: Container(
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.only(
+                                  left: 15, right: 15, top: 10, bottom: 10),
                               decoration: const BoxDecoration(
                                   color: cardColorbgColorDark,
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(15))),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    title,
-                                    textAlign: TextAlign.start,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        color: white.withOpacity(0.9),
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  Text(
-                                    "Description",
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.left,
-                                    maxLines: 12,
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        height: 1.5,
-                                        color: white.withOpacity(0.7),
-                                        fontWeight: FontWeight.w400),
-                                  )
-                                ],
+                              child: Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      title,
+                                      textAlign: TextAlign.start,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: white.withOpacity(0.9),
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    Text(
+                                      description,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.left,
+                                      maxLines: 8,
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          height: 1.5,
+                                          color: white.withOpacity(0.7),
+                                          fontWeight: FontWeight.w400),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           );
                         },
                         staggeredTileBuilder: (index) {
-                          return StaggeredTile.count(
-                              1, index.isEven ? 1.2 : 1.8);
+                          return StaggeredTile.fit(1);
+                          // return StaggeredTile.count(
+                          //     1, index.isEven ? 1.4 : 1.0);
                         });
                   }
                   return CircularProgressIndicator();

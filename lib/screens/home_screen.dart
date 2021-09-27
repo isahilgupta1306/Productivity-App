@@ -17,9 +17,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 1;
   final List<Widget> _children = [
-    WordsStore(),
-    NotesScreen(),
-    URLCollection(),
+    const WordsStore(),
+    const NotesScreen(),
+    const URLCollection(),
   ];
 
   void _selectPage(int index) {
@@ -34,7 +34,10 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => AddNote()));
+              .push(MaterialPageRoute(builder: (context) => AddNote()))
+              .then((value) {
+            setState(() {});
+          });
         },
         child: const Icon(
           CupertinoIcons.add,
