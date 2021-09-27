@@ -1,41 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class AddNote extends StatefulWidget {
-  const AddNote({Key? key}) : super(key: key);
+class ViewNote extends StatefulWidget {
+  final DocumentReference ref;
+  final Map data;
+  ViewNote(this.ref, this.data);
 
   @override
-  _AddNoteState createState() => _AddNoteState();
+  _ViewNoteState createState() => _ViewNoteState();
 }
 
-class _AddNoteState extends State<AddNote> {
-  TextEditingController titleController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-
-  void _add() async {
-    // save to db
-    CollectionReference ref = FirebaseFirestore.instance
-        .collection('NotesCollection')
-        .doc(FirebaseAuth.instance.currentUser?.uid)
-        .collection('notes');
-
-    var data = {
-      'title': titleController.text,
-      'description': descriptionController.text,
-      'created': DateTime.now(),
-    };
-    print('uid ');
-    print(FirebaseAuth.instance.currentUser?.uid);
-    ref.add(data);
-
-    //
-
-    // Navigator.pop(context);
-  }
-
+class _ViewNoteState extends State<ViewNote> {
   @override
   Widget build(BuildContext context) {
+    DateTime mydateTime = widget.data['created'].toDate();
+    String formattedTime = DateFormat.yMMMd().add_jm().format(mydateTime);
+    String initialTitle = widget.data['title'];
+    String initialDescription = widget.data['description'];
+    TextEditingController titleController =
+        TextEditingController(text: initialTitle);
+    TextEditingController descriptionController =
+        TextEditingController(text: initialDescription);
+    // String createdAt = widget.data['created'];
+    print('title' + initialTitle);
     return SafeArea(
       child: Scaffold(
         bottomNavigationBar: BottomAppBar(
@@ -47,17 +35,17 @@ class _AddNoteState extends State<AddNote> {
                 icon: Icon(Icons.menu),
                 onPressed: () {},
               ),
-              Text('Sample'),
+              Text(formattedTime),
               IconButton(
                 icon: Icon(Icons.search),
-                onPressed: _add,
+                onPressed: () {},
               ),
             ],
           ),
         ),
         appBar: AppBar(
           actions: [
-            IconButton(onPressed: _add, icon: Icon(Icons.arrow_back_ios_new))
+            IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back_ios_new))
           ],
           iconTheme: IconThemeData(
             color: Theme.of(context).primaryColor, //change your color here
@@ -80,6 +68,7 @@ class _AddNoteState extends State<AddNote> {
                       maxLines: 2,
                     ),
                     TextFormField(
+                      // initialValue: initialDescription,
                       controller: descriptionController,
                       decoration:
                           InputDecoration.collapsed(hintText: 'Description'),
@@ -95,5 +84,6 @@ class _AddNoteState extends State<AddNote> {
         ),
       ),
     );
+    ;
   }
 }

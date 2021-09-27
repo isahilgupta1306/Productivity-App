@@ -5,12 +5,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 class Note {
-  int id;
+  String id;
   String title;
   String content;
   DateTime date_created;
   DateTime date_last_edited;
-  Color note_color;
+  // Color note_color;
   int is_archived = 0;
 
   Note(
@@ -19,17 +19,18 @@ class Note {
     this.content,
     this.date_created,
     this.date_last_edited,
-    this.note_color,
+    // this.note_color,
   );
 
   Map<String, dynamic> toMap(bool forUpdate) {
     var data = {
 //      'id': id,  since id is auto incremented in the database we don't need to send it to the insert query.
+      'uid': utf8.encode(id),
       'title': utf8.encode(title),
       'content': utf8.encode(content),
       'date_created': epochFromDate(date_created),
       'date_last_edited': epochFromDate(date_last_edited),
-      'note_color': note_color.value,
+      // 'note_color': note_color.value,
       'is_archived': is_archived //  for later use for integrating archiving
     };
     if (forUpdate) {
