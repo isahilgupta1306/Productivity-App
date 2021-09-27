@@ -39,6 +39,8 @@ class _AddNoteState extends State<AddNote> {
     return SafeArea(
       child: Scaffold(
         bottomNavigationBar: BottomAppBar(
+          elevation: 0,
+          color: Colors.transparent,
           child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -76,15 +78,15 @@ class _AddNoteState extends State<AddNote> {
                       TextFormField(
                         controller: titleController,
                         decoration:
-                            InputDecoration.collapsed(hintText: 'Title'),
-                        style: TextStyle(fontSize: 22),
+                            const InputDecoration.collapsed(hintText: 'Title'),
+                        style: const TextStyle(fontSize: 22),
                         maxLines: 2,
                       ),
                       TextFormField(
                         controller: descriptionController,
-                        decoration:
-                            InputDecoration.collapsed(hintText: 'Description'),
-                        style: TextStyle(fontSize: 16),
+                        decoration: const InputDecoration.collapsed(
+                            hintText: 'Description'),
+                        style: const TextStyle(fontSize: 16),
                         maxLines: 35,
                         textInputAction: TextInputAction.newline,
                       )

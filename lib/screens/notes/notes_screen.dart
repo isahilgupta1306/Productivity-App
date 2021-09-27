@@ -39,6 +39,7 @@ class _NotesScreenState extends State<NotesScreen> {
                 width: deviceSize.width,
                 height: 45,
                 decoration: BoxDecoration(
+                    border: Border.all(color: white.withOpacity(0.22)),
                     color: cardColorbgColorDark,
                     boxShadow: [
                       BoxShadow(
@@ -118,48 +119,48 @@ class _NotesScreenState extends State<NotesScreen> {
                             child: Container(
                               padding: const EdgeInsets.only(
                                   left: 15, right: 15, top: 10, bottom: 10),
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                   color: cardColorbgColorDark,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15))),
-                              child: Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      title,
-                                      textAlign: TextAlign.start,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          color: white.withOpacity(0.9),
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    Text(
-                                      description,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.left,
-                                      maxLines: 8,
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          height: 1.5,
-                                          color: white.withOpacity(0.7),
-                                          fontWeight: FontWeight.w400),
-                                    )
-                                  ],
-                                ),
+                                  border: Border.all(
+                                      color: white.withOpacity(0.22)),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(15))),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    title,
+                                    textAlign: TextAlign.start,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: white.withOpacity(0.9),
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  Text(
+                                    description,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.left,
+                                    maxLines: 8,
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        height: 1.5,
+                                        color: white.withOpacity(0.7),
+                                        fontWeight: FontWeight.w400),
+                                  )
+                                ],
                               ),
                             ),
                           );
                         },
                         staggeredTileBuilder: (index) {
-                          return StaggeredTile.fit(1);
+                          return const StaggeredTile.fit(1);
                           // return StaggeredTile.count(
                           //     1, index.isEven ? 1.4 : 1.0);
                         });
                   }
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 },
               ),
             ),
