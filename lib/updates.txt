@@ -1,0 +1,4 @@
+1)Search Feature
+2)Share Feature //done
+3) Copy to Clipboard function //done
+4)URL preview
