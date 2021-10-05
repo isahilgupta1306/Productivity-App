@@ -1,4 +1,10 @@
-1)Search Feature
-2)Share Feature //done
+1) Search Feature
+2) Share Feature //done
 3) Copy to Clipboard function //done
-4)URL preview
+4) URL preview
+5) Dispose the controllers
+
+//show name in future enhancements
+//verify email page remaining
+//circle avator for  profile image
+//navigate recieve intent Feature to HomeScreen

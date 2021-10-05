@@ -23,8 +23,6 @@ class _ViewNoteState extends State<ViewNote> {
       'description': description,
       'created': DateTime.now(),
     };
-    print('updated');
-    print(FirebaseAuth.instance.currentUser?.uid);
     await reference.update(data);
   }
 
@@ -210,7 +208,6 @@ class _ViewNoteState extends State<ViewNote> {
                   onPressed: () {
                     if (title == null && description == null) {
                       Navigator.pop(context);
-                      print('no new updates');
                     } else {
                       update(title, description, widget.ref);
                       Navigator.pop(context);

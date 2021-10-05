@@ -224,7 +224,7 @@ class _LoginFormState extends State<LoginForm> {
                 );
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                    builder: (context) => const HomeScreen(),
+                    builder: (context) => HomeScreen(1),
                   ),
                 );
               },

@@ -39,8 +39,12 @@ class AuthenticationService {
   }
 
   Future<void> userDetails(String displayName) async {
-    CollectionReference users = FirebaseFirestore.instance.collection('Users');
     String? uid = _firebaseAuth.currentUser?.uid;
+    CollectionReference users = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(uid)
+        .collection('UserCred');
+
     String? email = _firebaseAuth.currentUser?.email;
     if (uid != null) {
       var obj = users.add({
@@ -50,5 +54,19 @@ class AuthenticationService {
         'provider': 'byEmail'
       });
     }
+  }
+
+  Future<String?> getUserDetails() async {
+    String? uid = _firebaseAuth.currentUser?.uid;
+    var userData = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(uid)
+        .collection('UserCred')
+        .get();
+
+    String? name = userData.docs[0]['displayName'];
+    return name;
+    // print(name);
+    print(userData.docs[0]['displayName']);
   }
 }

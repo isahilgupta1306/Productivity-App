@@ -55,9 +55,9 @@ class _AddNoteState extends State<AddNote> {
                   onPressed: () => modalBottomSheet(
                       titleController.text, descriptionController.text),
                 ),
-                Text('Save your Note'),
+                const Text('Save your Note'),
                 IconButton(
-                  icon: Icon(Icons.save_alt_outlined),
+                  icon: const Icon(Icons.save_alt_outlined),
                   onPressed: () =>
                       _add(titleController.text, descriptionController.text),
                 ),
@@ -69,7 +69,7 @@ class _AddNoteState extends State<AddNote> {
               IconButton(
                   onPressed: () => _addText(
                       titleController.text, descriptionController.text),
-                  icon: Icon(Icons.share_outlined)),
+                  icon: const Icon(Icons.share_outlined)),
             ],
             iconTheme: IconThemeData(
               color: Theme.of(context).primaryColor, //change your color here

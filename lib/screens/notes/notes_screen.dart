@@ -4,10 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:productivity_app/auth/authentication_services.dart';
 import 'package:productivity_app/helpers/custom_colors.dart';
+import 'package:productivity_app/helpers/intent_share_module/share_services.dart';
 import 'package:productivity_app/screens/notes/widgets/side_drawer.dart';
 import 'package:productivity_app/screens/notes/widgets/view_notes.dart';
+import 'package:productivity_app/screens/url_collection.dart';
+import 'package:provider/provider.dart';
 
 class NotesScreen extends StatefulWidget {
   const NotesScreen({Key? key}) : super(key: key);
@@ -17,21 +22,42 @@ class NotesScreen extends StatefulWidget {
 }
 
 class _NotesScreenState extends State<NotesScreen> {
-  GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  String sharedUrl = "";
 
   CollectionReference ref = FirebaseFirestore.instance
       .collection('NotesCollection')
       .doc(FirebaseAuth.instance.currentUser?.uid)
       .collection('notes');
 
+  String? userName;
+  AuthenticationService authServObj =
+      AuthenticationService(FirebaseAuth.instance);
+
+  getName() async {
+    print('yes');
+    userName = await authServObj.getUserDetails();
+
+    print(userName);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getName();
+  }
+
   @override
   Widget build(BuildContext context) {
+    String? displayName;
+
     var deviceSize = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () => showExitPopup(context),
       child: Scaffold(
         key: _drawerKey,
-        drawer: SideDrawer(),
+        drawer: SideDrawer('Hey there !'),
         backgroundColor: bgColorDark,
         body: SafeArea(
           child: SingleChildScrollView(
@@ -65,7 +91,9 @@ class _NotesScreenState extends State<NotesScreen> {
                             onPressed: () {
                               _drawerKey.currentState?.openDrawer();
                             },
-                            icon: const Icon(Icons.menu),
+                            icon: const Icon(
+                              Icons.menu,
+                            ),
                             color: white.withOpacity(0.7),
                           ),
                           const SizedBox(
@@ -76,8 +104,11 @@ class _NotesScreenState extends State<NotesScreen> {
                           SizedBox(
                             width: deviceSize.width * 0.5,
                             child: TextFormField(
-                              decoration: const InputDecoration.collapsed(
-                                  hintText: 'Search your notes'),
+                              decoration: InputDecoration.collapsed(
+                                  hintText: 'Search your notes',
+                                  hintStyle: TextStyle(
+                                    color: white.withOpacity(0.7),
+                                  )),
                             ),
                           ),
                           Icon(
@@ -198,10 +229,10 @@ class _NotesScreenState extends State<NotesScreen> {
     return await showDialog(
         context: context,
         builder: (context) => CupertinoAlertDialog(
-              title: Text("Are you sure you want to Exit ?"),
+              title: const Text("Are you sure you want to Exit ?"),
               actions: <Widget>[
                 CupertinoDialogAction(
-                  child: Text("Yes"),
+                  child: const Text("Yes"),
                   onPressed: () {
                     exit(0);
                   },
