@@ -1,12 +1,20 @@
 import 'dart:async';
 
+import 'package:clipboard/clipboard.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:productivity_app/helpers/custom_colors.dart';
 
 import 'package:productivity_app/screens/notes/add_note.dart';
 import 'package:productivity_app/screens/notes/notes_screen.dart';
 import 'package:productivity_app/screens/word_store.dart';
 import 'package:productivity_app/screens/url_collection.dart';
+
+import 'notes/widgets/expandable_fab.dart';
 
 class HomeScreen extends StatefulWidget {
   int ind;
@@ -18,6 +26,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late int _currentIndex;
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _urlController = TextEditingController();
 
   void _selectPage(int index) {
     setState(() {
@@ -38,21 +49,38 @@ class _HomeScreenState extends State<HomeScreen> {
       const NotesScreen(),
       URLCollection(),
     ];
+
+    var deviceSize = MediaQuery.of(context).size;
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => const AddNote()))
-              .then((value) {
-            setState(() {});
-          });
-        },
-        child: const Icon(
-          CupertinoIcons.add,
-          color: Colors.white,
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      extendBody: true,
+      floatingActionButton: SpeedDial(
+          icon: CupertinoIcons.add,
+          backgroundColor: Theme.of(context).primaryColor,
+          children: [
+            SpeedDialChild(
+              child: const Icon(Icons.link),
+              label: 'Add URL',
+              labelBackgroundColor: Colors.white70,
+              backgroundColor: Theme.of(context).primaryColor,
+              onTap: _modalBottomSheetMenu,
+            ),
+            SpeedDialChild(
+              child: const Icon(
+                CupertinoIcons.text_alignleft,
+              ),
+              label: 'Create Notes',
+              labelBackgroundColor: Colors.white70,
+              backgroundColor: Theme.of(context).primaryColor,
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(
+                        builder: (context) => const AddNote()))
+                    .then((value) {
+                  setState(() {});
+                });
+              },
+            ),
+          ]),
       bottomNavigationBar: BottomNavigationBar(
         elevation: 10,
         items: const [
@@ -78,42 +106,148 @@ class _HomeScreenState extends State<HomeScreen> {
         currentIndex:
             _currentIndex, // this will be set when a new tab is tapped
       ),
-      // bottomNavigationBar: BottomAppBar(
-      //   //bottom navigation bar on scaffold
-      //
-      //   shape: CircularNotchedRectangle(), //shape of notch
-      //   notchMargin:
-      //       5, //notche margin between floating button and bottom appbar
-      //   child: Row(
-      //     //children inside bottom appbar
-      //     mainAxisSize: MainAxisSize.min,
-      //     mainAxisAlignment: MainAxisAlignment.start,
-      //     children: <Widget>[
-      //       IconButton(
-      //         icon: Icon(
-      //           Icons.menu,
-      //           color: Colors.white,
-      //         ),
-      //         onPressed: () {},
-      //       ),
-      //       IconButton(
-      //         icon: Icon(
-      //           Icons.search,
-      //           color: Colors.white,
-      //         ),
-      //         onPressed: () {},
-      //       ),
-      //       IconButton(
-      //         icon: Icon(
-      //           Icons.print,
-      //           color: Colors.white,
-      //         ),
-      //         onPressed: () {},
-      //       ),
-      //     ],
-      //   ),
-      // ),
       body: _children[_currentIndex],
     );
+  }
+
+  _modalBottomSheetMenu() {
+    showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+        context: context,
+        builder: (builder) {
+          return StatefulBuilder(builder: (BuildContext context,
+              StateSetter setState /*You can rename this!*/) {
+            return Container(
+              height: 350.0,
+              color: Colors.transparent,
+              child: Container(
+                decoration: const BoxDecoration(
+                    color: cardColorbgColorDark,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10.0),
+                        topRight: Radius.circular(10.0))),
+                child: Column(children: [
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.87,
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(Icons.title),
+                              hintText: 'Title',
+                              border: const OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(28),
+                                ),
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(28),
+                                ),
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: Theme.of(context).primaryColor),
+                              ),
+                            ),
+                            validator: (String? title) {
+                              if (title == null || title.isEmpty) {
+                                return 'Enter a valid keyword for url';
+                              }
+                            },
+                            controller: _titleController,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.87,
+                          child: TextFormField(
+                            controller: _urlController,
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                icon: const Icon(Icons.copy_outlined),
+                                onPressed: () {
+                                  FlutterClipboard.paste().then((value) {
+                                    setState(() {
+                                      _urlController =
+                                          TextEditingController(text: value);
+                                    });
+                                  });
+                                  Fluttertoast.showToast(
+                                    msg: 'Text Copied',
+                                    toastLength: Toast.LENGTH_SHORT,
+                                  );
+                                },
+                                splashColor: Colors.white,
+                              ),
+                              prefixIcon: const Icon(Icons.link),
+                              hintText: 'Enter URL',
+                              border: const OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(28),
+                                ),
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(28),
+                                ),
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: Theme.of(context).primaryColor),
+                              ),
+                            ),
+                            validator: (String? url) {
+                              if (url == null || !url.contains('http')) {
+                                return 'Enter a valid url';
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _submitForm(context, _titleController.text,
+                              _urlController.text);
+                        }
+                      },
+                      child: const Text('Save URL')),
+                ]),
+              ),
+            );
+          });
+        });
+  }
+
+  _submitForm(BuildContext context, String title, String url) async {
+    // More to be added here
+
+    CollectionReference ref = FirebaseFirestore.instance
+        .collection('NotesCollection')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .collection('URLCollection');
+    var data = {
+      'title': title,
+      'url': url,
+      'created': DateTime.now(),
+    };
+    ref.add(data);
+    Navigator.of(context).pop();
+    Fluttertoast.showToast(msg: "URL Saved ");
   }
 }

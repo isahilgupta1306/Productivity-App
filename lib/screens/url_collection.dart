@@ -53,6 +53,7 @@ class _URLCollectionState extends State<URLCollection> {
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: bgColorDark,
       appBar: AppBar(),
       body: SingleChildScrollView(
         child: Column(
@@ -60,10 +61,11 @@ class _URLCollectionState extends State<URLCollection> {
             Container(
               height: deviceSize.height * 0.78,
               child: StaggeredGridView.countBuilder(
+                  padding: EdgeInsets.all(10),
                   crossAxisCount: 2, //for column
                   crossAxisSpacing: 12,
                   mainAxisSpacing: 12,
-                  itemCount: 2,
+                  itemCount: 12,
                   itemBuilder: (context, index) {
                     return InkWell(
                       splashColor: white,
@@ -79,7 +81,36 @@ class _URLCollectionState extends State<URLCollection> {
                                 const BorderRadius.all(Radius.circular(15))),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [],
+                          children: [
+                            Center(
+                              child: Text(
+                                "URL Title",
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: white.withOpacity(0.9),
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            Divider(
+                              color: white.withOpacity(0.22),
+                              indent: 10,
+                              endIndent: 10,
+                            ),
+                            Text(
+                              "link",
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              maxLines: 3,
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  height: 1.5,
+                                  color: white.withOpacity(0.7),
+                                  fontWeight: FontWeight.w400),
+                            )
+                          ],
                         ),
                       ),
                     );

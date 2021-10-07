@@ -153,14 +153,10 @@ class _LoginFormState extends State<LoginForm> {
           SizedBox(
             width: deviceSize.width * 0.87,
             child: Container(
-              decoration: BoxDecoration(boxShadow: [
-                // BoxShadow(
-                //   color: Colors.grey.withOpacity(0.5),
-                //   spreadRadius: 3,
-                //   blurRadius: 4,
-                //   offset: const Offset(0, 2), // changes position of shadow
-                // ),
-              ], color: Colors.white, borderRadius: BorderRadius.circular(28)),
+              decoration: BoxDecoration(
+                  boxShadow: const [],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(28)),
               child: TextFormField(
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.lock_outline),
