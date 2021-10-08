@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:clipboard/clipboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,13 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:productivity_app/helpers/custom_colors.dart';
-
 import 'package:productivity_app/screens/notes/add_note.dart';
 import 'package:productivity_app/screens/notes/notes_screen.dart';
 import 'package:productivity_app/screens/word_store.dart';
-import 'package:productivity_app/screens/url_collection.dart';
-
-import 'notes/widgets/expandable_fab.dart';
+import 'package:productivity_app/screens/URL%20Module/url_collection.dart';
 
 class HomeScreen extends StatefulWidget {
   int ind;
@@ -40,6 +35,13 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _currentIndex = widget.ind;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _titleController.dispose();
+    _urlController.dispose();
   }
 
   @override
@@ -224,6 +226,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         if (_formKey.currentState!.validate()) {
                           _submitForm(context, _titleController.text,
                               _urlController.text);
+                          _titleController.clear();
+                          _urlController.clear();
                         }
                       },
                       child: const Text('Save URL')),

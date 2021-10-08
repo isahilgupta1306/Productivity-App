@@ -11,7 +11,7 @@ import 'package:productivity_app/helpers/custom_colors.dart';
 import 'package:productivity_app/helpers/intent_share_module/share_services.dart';
 import 'package:productivity_app/screens/notes/widgets/side_drawer.dart';
 import 'package:productivity_app/screens/notes/widgets/view_notes.dart';
-import 'package:productivity_app/screens/url_collection.dart';
+import 'package:productivity_app/screens/URL%20Module/url_collection.dart';
 import 'package:provider/provider.dart';
 
 class NotesScreen extends StatefulWidget {

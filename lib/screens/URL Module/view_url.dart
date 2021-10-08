@@ -1,21 +1,20 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 
-class ViewNote extends StatefulWidget {
+class ViewURL extends StatefulWidget {
   final DocumentReference ref;
   final Map data;
-  ViewNote(this.ref, this.data);
+  ViewURL(this.ref, this.data);
 
   @override
-  _ViewNoteState createState() => _ViewNoteState();
+  _ViewURLState createState() => _ViewURLState();
 }
 
-class _ViewNoteState extends State<ViewNote> {
+class _ViewURLState extends State<ViewURL> {
   void update(
       String? title, String? description, DocumentReference reference) async {
     var data = {
@@ -37,15 +36,15 @@ class _ViewNoteState extends State<ViewNote> {
     DateTime mydateTime = widget.data['created'].toDate();
     String formattedTime = 'Edited ' + DateFormat.MMMd().format(mydateTime);
     String initialTitle = widget.data['title'];
-    String initialDescription = widget.data['description'];
+    String initialDescription = widget.data['url'];
     TextEditingController titleController =
         TextEditingController(text: initialTitle);
-    TextEditingController descriptionController =
+    TextEditingController urlController =
         TextEditingController(text: initialDescription);
-    // String createdAt = widget.data['created'];
+
     return WillPopScope(
-      onWillPop: () => showExitPopup(
-          context, titleController.text, descriptionController.text),
+      onWillPop: () =>
+          showExitPopup(context, titleController.text, urlController.text),
       child: SafeArea(
         child: Scaffold(
           bottomNavigationBar: BottomAppBar(
@@ -57,16 +56,15 @@ class _ViewNoteState extends State<ViewNote> {
                 IconButton(
                   icon: const Icon(Icons.more_vert_outlined),
                   onPressed: () {
-                    modalBottomSheet(
-                        titleController.text, descriptionController.text);
+                    modalBottomSheet(titleController.text, urlController.text);
                   },
                 ),
                 Text(formattedTime),
                 IconButton(
                   icon: const Icon(Icons.save_alt_outlined),
                   onPressed: () {
-                    update(titleController.text, descriptionController.text,
-                        widget.ref);
+                    update(
+                        titleController.text, urlController.text, widget.ref);
                   },
                 ),
               ],
@@ -75,8 +73,7 @@ class _ViewNoteState extends State<ViewNote> {
           appBar: AppBar(
             actions: [
               IconButton(
-                  onPressed: () => _addText(
-                      titleController.text, descriptionController.text),
+                  onPressed: () => _addText(urlController.text),
                   icon: const Icon(Icons.copy_outlined)),
             ],
             iconTheme: IconThemeData(
@@ -103,12 +100,12 @@ class _ViewNoteState extends State<ViewNote> {
                           ),
                           TextFormField(
                             // initialValue: initialDescription,
-                            controller: descriptionController,
+                            controller: urlController,
                             decoration: const InputDecoration.collapsed(
-                                hintText: 'Description'),
+                                hintText: 'URL'),
                             style: const TextStyle(fontSize: 16),
                             maxLines: 30,
-                            textInputAction: TextInputAction.newline,
+                            textInputAction: TextInputAction.done,
                           )
                         ],
                       ),
@@ -135,7 +132,7 @@ class _ViewNoteState extends State<ViewNote> {
                 title: const Text('Share'),
                 onTap: () {
                   try {
-                    String? message = null;
+                    String? message;
                     if (title == null) {
                       message = description;
                       Share.share(message!, subject: description);
@@ -226,9 +223,8 @@ class _ViewNoteState extends State<ViewNote> {
             ));
   }
 
-  void _addText(String title, String description) {
-    FlutterClipboard.copy(title + '\n' + description)
-        .then((value) => print('copied'));
+  void _addText(String url) {
+    FlutterClipboard.copy(url).then((value) => print('copied'));
   }
 
   void delete() async {
