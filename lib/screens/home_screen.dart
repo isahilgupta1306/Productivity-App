@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:clipboard/clipboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -53,62 +55,65 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
 
     var deviceSize = MediaQuery.of(context).size;
-    return Scaffold(
-      extendBody: true,
-      floatingActionButton: SpeedDial(
-          icon: CupertinoIcons.add,
-          backgroundColor: Theme.of(context).primaryColor,
-          children: [
-            SpeedDialChild(
-              child: const Icon(Icons.link),
-              label: 'Add URL',
-              labelBackgroundColor: Colors.white70,
-              backgroundColor: Theme.of(context).primaryColor,
-              onTap: _modalBottomSheetMenu,
-            ),
-            SpeedDialChild(
-              child: const Icon(
-                CupertinoIcons.text_alignleft,
+    return WillPopScope(
+      onWillPop: () => showExitPopup(context),
+      child: Scaffold(
+        extendBody: true,
+        floatingActionButton: SpeedDial(
+            icon: CupertinoIcons.add,
+            backgroundColor: Theme.of(context).primaryColor,
+            children: [
+              SpeedDialChild(
+                child: const Icon(Icons.link),
+                label: 'Add URL',
+                labelBackgroundColor: Colors.white70,
+                backgroundColor: Theme.of(context).primaryColor,
+                onTap: _modalBottomSheetMenu,
               ),
-              label: 'Create Notes',
-              labelBackgroundColor: Colors.white70,
-              backgroundColor: Theme.of(context).primaryColor,
-              onTap: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(
-                        builder: (context) => const AddNote()))
-                    .then((value) {
-                  setState(() {});
-                });
-              },
+              SpeedDialChild(
+                child: const Icon(
+                  CupertinoIcons.text_alignleft,
+                ),
+                label: 'Create Notes',
+                labelBackgroundColor: Colors.white70,
+                backgroundColor: Theme.of(context).primaryColor,
+                onTap: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(
+                          builder: (context) => const AddNote()))
+                      .then((value) {
+                    setState(() {});
+                  });
+                },
+              ),
+            ]),
+        bottomNavigationBar: BottomNavigationBar(
+          elevation: 10,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(
+                CupertinoIcons.book_circle,
+                size: 25,
+              ),
+              label: 'WordStore',
             ),
-          ]),
-      bottomNavigationBar: BottomNavigationBar(
-        elevation: 10,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(
-              CupertinoIcons.book_circle,
-              size: 25,
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.notes_rounded,
+              ),
+              label: 'Notes',
             ),
-            label: 'WordStore',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.notes_rounded,
+            BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.link_circle),
+              label: 'URLs',
             ),
-            label: 'Notes',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.link_circle),
-            label: 'URLs',
-          ),
-        ],
-        onTap: _selectPage,
-        currentIndex:
-            _currentIndex, // this will be set when a new tab is tapped
+          ],
+          onTap: _selectPage,
+          currentIndex:
+              _currentIndex, // this will be set when a new tab is tapped
+        ),
+        body: _children[_currentIndex],
       ),
-      body: _children[_currentIndex],
     );
   }
 
@@ -253,5 +258,27 @@ class _HomeScreenState extends State<HomeScreen> {
     ref.add(data);
     Navigator.of(context).pop();
     Fluttertoast.showToast(msg: "URL Saved ");
+  }
+
+  Future<bool> showExitPopup(context) async {
+    return await showDialog(
+        context: context,
+        builder: (context) => CupertinoAlertDialog(
+              title: const Text("Are you sure you want to Exit ?"),
+              actions: <Widget>[
+                CupertinoDialogAction(
+                  child: const Text("Yes"),
+                  onPressed: () {
+                    exit(0);
+                  },
+                ),
+                CupertinoDialogAction(
+                  child: const Text("No"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ));
   }
 }

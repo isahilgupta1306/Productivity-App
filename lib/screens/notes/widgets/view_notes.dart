@@ -158,7 +158,7 @@ class _ViewNoteState extends State<ViewNote> {
                 },
               ),
               ListTile(
-                leading: Icon(CupertinoIcons.delete_simple),
+                leading: const Icon(CupertinoIcons.delete_simple),
                 title: const Text('Delete Note'),
                 onTap: () {
                   _showDialog(context);

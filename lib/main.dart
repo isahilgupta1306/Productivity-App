@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../auth/authentication_services.dart';
 import '../auth/authentication_wrapper.dart';
 import 'package:provider/provider.dart';
@@ -56,6 +57,12 @@ class MyApp extends StatelessWidget {
           ),
           dividerColor: darkColor,
           brightness: Brightness.light,
+          //fonts
+          textTheme: GoogleFonts.robotoTextTheme(
+            Theme.of(context).textTheme,
+          ),
+          // fonts used : catamaran , robota
+          visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: const AuthenticcationWrapper(),
         debugShowCheckedModeBanner: false,

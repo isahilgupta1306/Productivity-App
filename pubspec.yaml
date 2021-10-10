@@ -52,6 +52,7 @@ dependencies:
   receive_sharing_intent: ^1.4.5
   flutter_speed_dial: ^3.0.5
   url_launcher: ^6.0.12
+  google_fonts: ^2.1.0
   # flutter_linkify: ^3.1.3
  
 
@@ -84,6 +85,7 @@ flutter:
   assets:
     - assets/login.svg
     - assets/signup.svg
+    - assets/search_illustration.svg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

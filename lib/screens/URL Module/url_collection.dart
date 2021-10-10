@@ -62,11 +62,15 @@ class _URLCollectionState extends State<URLCollection> {
     var deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: bgColorDark,
-      appBar: AppBar(),
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('Important URLs'),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
+              padding: const EdgeInsets.only(top: 6),
               height: deviceSize.height * 0.78,
               child: FutureBuilder<QuerySnapshot>(
                 future: ref.get(),
@@ -170,7 +174,9 @@ class _URLCollectionState extends State<URLCollection> {
                 },
               ),
             ),
-            Center(child: Text(_sharedText ??= " ")),
+            Center(
+              child: Text(_sharedText ??= " "),
+            ),
           ],
         ),
       ),
