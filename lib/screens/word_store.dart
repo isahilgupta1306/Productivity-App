@@ -88,6 +88,7 @@ class _WordsStoreState extends State<WordsStore> {
                           width: deviceSize.width * 0.75,
                           child: Center(
                             child: TextFormField(
+                              controller: _controller,
                               textAlign: TextAlign.center,
                               textInputAction: TextInputAction.search,
                               decoration: InputDecoration(
@@ -105,7 +106,11 @@ class _WordsStoreState extends State<WordsStore> {
                                     color: white.withOpacity(0.7),
                                   ),
                                   suffixIcon: IconButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      apiManager
+                                          .searchByFuture(_controller.text);
+                                      setState(() {});
+                                    },
                                     icon: Icon(
                                       Icons.search,
                                       color: themeProvider.isLightTheme
@@ -115,6 +120,10 @@ class _WordsStoreState extends State<WordsStore> {
                                   ),
                                   hintText: 'Search your Word',
                                   hintStyle: textStyle),
+                              onFieldSubmitted: (word) {
+                                apiManager.searchByFuture(word);
+                                setState(() {});
+                              },
                             ),
                           ),
                         ),
