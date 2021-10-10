@@ -8,3 +8,77 @@
 //verify email page remaining
 //circle avator for  profile image
 //navigate recieve intent Feature to HomeScreen
+
+
+
+
+imp widgets
+
+
+//Continued expanded appbar
+AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        centerTitle: true,
+        title: Text(
+          '< Word Shelf >',
+          style:
+              GoogleFonts.catamaran(fontSize: 25, fontWeight: FontWeight.w800),
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(48.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 12, bottom: 8),
+                    decoration: BoxDecoration(
+                        color: themeProvider.isLightTheme
+                            ? white
+                            : cardColorbgColorDark,
+                        borderRadius: BorderRadius.circular(24)),
+                    child: TextFormField(
+                        controller: _controller,
+                        onFieldSubmitted: (String value) {
+                          apiManager.searchByFuture(_controller.text);
+                          setState(() {});
+                        },
+                        decoration: const InputDecoration(
+                          hintText: "Enter the word",
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.only(left: 24.0),
+                        ),
+                        onChanged: (String text) {
+                          // if (_debounce?.isActive ?? false) _debounce.cancel();
+                          // _debounce =
+                          //     Timer(const Duration(milliseconds: 1000), () {
+                          //   _searchByFuture();
+                          //   setState(() {});
+                          // });
+                        }),
+                  ),
+                ),
+              ),
+              IconButton(
+                padding: const EdgeInsets.only(bottom: 8),
+                splashColor: Colors.cyan[900],
+                onPressed: () {
+                  apiManager.searchByFuture(_controller.text);
+                  FocusScopeNode currentFocus = FocusScope.of(context);
+
+                  if (!currentFocus.hasPrimaryFocus) {
+                    currentFocus.unfocus();
+                  }
+                  setState(() {});
+                },
+                icon: Icon(
+                  Icons.search_outlined,
+                  color:
+                      themeProvider.isLightTheme ? white : cardColorbgColorDark,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),

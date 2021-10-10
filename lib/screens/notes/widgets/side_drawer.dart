@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:productivity_app/auth/authentication_services.dart';
 import 'package:productivity_app/helpers/custom_colors.dart';
+import 'package:productivity_app/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class SideDrawer extends StatefulWidget {
@@ -23,16 +24,21 @@ class _SideDrawerState extends State<SideDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    final deviceSize = MediaQuery.of(context).size;
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final label_style = TextStyle(
+      color: themeProvider.isLightTheme ? cardColorbgColorDark : white,
+      fontWeight: FontWeight.w500,
+      fontSize: 15,
+    );
     return Drawer(
       child: Container(
-        decoration: const BoxDecoration(color: cardColorbgColorDark),
+        decoration: BoxDecoration(
+            color: themeProvider.isLightTheme ? white : bgColorDark),
         child: ListView(
           children: [
             Container(
               height: 50,
-              decoration: BoxDecoration(
-                  border: Border(
-                      bottom: BorderSide(color: white.withOpacity(0.1)))),
               child: DrawerHeader(
                 padding: EdgeInsets.zero,
                 child: Padding(
@@ -43,6 +49,43 @@ class _SideDrawerState extends State<SideDrawer> {
                         fontWeight: FontWeight.w500,
                         fontSize: 18,
                         color: white),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: const BorderRadius.only(
+                    bottomRight: Radius.circular(50),
+                    topRight: Radius.circular(50)),
+                onTap: () async {
+                  await themeProvider.toggleThemeData();
+                  setState(() {});
+                },
+                splashColor: bgColorDark,
+                child: Container(
+                  height: deviceSize.height * 0.075,
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(50),
+                          topRight: Radius.circular(50))),
+                  child: Row(
+                    children: [
+                      const SizedBox(
+                        width: 30,
+                      ),
+                      const Icon(
+                        Icons.format_paint,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text("Change Theme", style: label_style),
+                    ],
                   ),
                 ),
               ),
@@ -58,6 +101,7 @@ class _SideDrawerState extends State<SideDrawer> {
                 },
                 splashColor: bgColorDark,
                 child: Container(
+                  height: deviceSize.height * 0.075,
                   decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
                           bottomRight: Radius.circular(50),
@@ -73,15 +117,9 @@ class _SideDrawerState extends State<SideDrawer> {
                       const SizedBox(
                         width: 10,
                       ),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text(
-                          "SignOut",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15,
-                              color: white),
-                        ),
+                      Text(
+                        "SignOut",
+                        style: label_style,
                       ),
                     ],
                   ),

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,6 +13,8 @@ import 'package:productivity_app/screens/notes/widgets/side_drawer.dart';
 import 'package:productivity_app/screens/notes/widgets/view_notes.dart';
 import 'package:productivity_app/screens/URL%20Module/url_collection.dart';
 import 'package:provider/provider.dart';
+
+import '../../theme_provider.dart';
 
 class NotesScreen extends StatefulWidget {
   const NotesScreen({Key? key}) : super(key: key);
@@ -52,77 +53,82 @@ class _NotesScreenState extends State<NotesScreen> {
   @override
   Widget build(BuildContext context) {
     String? displayName;
-
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final text_style = TextStyle(
+        color: themeProvider.isLightTheme
+            ? primaryColorDark
+            : white.withOpacity(0.7));
     var deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 15,
-        // title: Text(
-        //   'Notes',
-        //   style: GoogleFonts.catamaran(
-        //       fontSize: 35, fontWeight: FontWeight.w800),
-        // ),
+        toolbarHeight: deviceSize.height * 0.085,
+        title: Text(
+          'Notes',
+          style: GoogleFonts.catamaran(
+              color: primaryColor, fontSize: 35, fontWeight: FontWeight.w800),
+        ),
         automaticallyImplyLeading: false,
         centerTitle: true,
         elevation: 0,
-        // backgroundColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.only(
-                    left: 15, right: 15, top: 8, bottom: 8),
+                padding: const EdgeInsets.only(left: 15, right: 15, bottom: 8),
                 child: Container(
-                  width: deviceSize.width * 0.88,
+                  width: deviceSize.width * 0.85,
                   height: 45,
                   decoration: BoxDecoration(
                       border: Border.all(color: white.withOpacity(0.22)),
-                      // color: cardColorbgColorDark,
-                      // boxShadow: [
-                      //   BoxShadow(
-                      //       color: black.withOpacity(0.2),
-                      //       spreadRadius: 1,
-                      //       blurRadius: 3),
-                      // ],
+                      color:
+                          themeProvider.isLightTheme ? dimWhite : bgColorDark,
+                      boxShadow: [
+                        BoxShadow(
+                            color: primaryColorDark.withOpacity(0.6),
+                            spreadRadius: 3,
+                            blurRadius: 4),
+                      ],
                       borderRadius: BorderRadius.circular(28)),
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 10,
-                      right: 10,
-                    ),
+                    padding: const EdgeInsets.only(),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        IconButton(
-                          onPressed: () {
-                            _drawerKey.currentState?.openDrawer();
-                          },
-                          icon: const Icon(
-                            Icons.menu,
-                          ),
-                          color: white.withOpacity(0.7),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-
                         //  fontSize: 15, color: white.withOpacity(0.7))
                         SizedBox(
-                          width: deviceSize.width * 0.5,
-                          child: TextFormField(
-                            decoration: InputDecoration.collapsed(
-                                hintText: 'Search your notes',
-                                hintStyle: TextStyle(
-                                  color: white.withOpacity(0.7),
-                                )),
+                          width: deviceSize.width * 0.75,
+                          child: Center(
+                            child: TextFormField(
+                              textAlign: TextAlign.center,
+                              textInputAction: TextInputAction.search,
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  prefixIcon: IconButton(
+                                    onPressed: () {
+                                      _drawerKey.currentState?.openDrawer();
+                                    },
+                                    icon: Icon(
+                                      Icons.menu,
+                                      color: themeProvider.isLightTheme
+                                          ? primaryColorDark
+                                          : white.withOpacity(0.7),
+                                    ),
+                                    color: white.withOpacity(0.7),
+                                  ),
+                                  suffixIcon: Icon(
+                                    Icons.person_outline,
+                                    color: themeProvider.isLightTheme
+                                        ? primaryColorDark
+                                        : white.withOpacity(0.7),
+                                  ),
+                                  hintText: 'Search your Notes',
+                                  hintStyle: text_style),
+                            ),
                           ),
                         ),
-                        Icon(
-                          Icons.person_outline,
-                          color: Theme.of(context).iconTheme.color,
-                        )
                       ],
                     ),
                   ),
@@ -134,7 +140,8 @@ class _NotesScreenState extends State<NotesScreen> {
       ),
       key: _drawerKey,
       drawer: SideDrawer('Hey there !'),
-      backgroundColor: bgColorDark,
+      backgroundColor:
+          themeProvider.isLightTheme ? Colors.white54 : bgColorDark,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -178,7 +185,9 @@ class _NotesScreenState extends State<NotesScreen> {
                                   padding: const EdgeInsets.only(
                                       left: 15, right: 15, top: 10, bottom: 10),
                                   decoration: BoxDecoration(
-                                      color: cardColorbgColorDark,
+                                      color: themeProvider.isLightTheme
+                                          ? primaryColorDark
+                                          : bgColorDark, //cardColorbgColorDark,
                                       border: Border.all(
                                           color: white.withOpacity(0.22)),
                                       borderRadius: const BorderRadius.all(

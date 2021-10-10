@@ -9,6 +9,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:productivity_app/helpers/custom_colors.dart';
 import 'package:productivity_app/helpers/dictionary_api.dart';
 import 'package:productivity_app/models/disctionary_model.dart';
+import 'package:productivity_app/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'notes/widgets/side_drawer.dart';
 
@@ -34,65 +36,91 @@ class _WordsStoreState extends State<WordsStore> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final deviceSize = MediaQuery.of(context).size;
+    final textStyle = TextStyle(
+        color: themeProvider.isLightTheme
+            ? primaryColorDark
+            : white.withOpacity(0.7));
     return Scaffold(
+      backgroundColor: themeProvider.isLightTheme ? dimWhite : bgColorDark,
       key: _drawerKey,
       drawer: SideDrawer('Hey there !'),
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        centerTitle: true,
+        toolbarHeight: deviceSize.height * 0.085,
         title: Text(
-          '< Word Shelf >',
-          style:
-              GoogleFonts.catamaran(fontSize: 25, fontWeight: FontWeight.w800),
+          'Notes',
+          style: GoogleFonts.catamaran(
+              color: primaryColor, fontSize: 35, fontWeight: FontWeight.w800),
         ),
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48.0),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Container(
-                    margin: const EdgeInsets.only(left: 12, bottom: 8),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(24)),
-                    child: TextFormField(
-                        controller: _controller,
-                        onFieldSubmitted: (String value) {
-                          apiManager.searchByFuture(_controller.text);
-                          setState(() {});
-                        },
-                        decoration: const InputDecoration(
-                          hintText: "Enter the word",
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(left: 24.0),
+              Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15, bottom: 8),
+                child: Container(
+                  width: deviceSize.width * 0.85,
+                  height: 45,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: white.withOpacity(0.22)),
+                      color:
+                          themeProvider.isLightTheme ? dimWhite : bgColorDark,
+                      boxShadow: [
+                        BoxShadow(
+                            color: primaryColorDark.withOpacity(0.6),
+                            spreadRadius: 3,
+                            blurRadius: 4),
+                      ],
+                      borderRadius: BorderRadius.circular(28)),
+                  child: Padding(
+                    padding: const EdgeInsets.only(),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        //  fontSize: 15, color: white.withOpacity(0.7))
+                        SizedBox(
+                          width: deviceSize.width * 0.75,
+                          child: Center(
+                            child: TextFormField(
+                              textAlign: TextAlign.center,
+                              textInputAction: TextInputAction.search,
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  prefixIcon: IconButton(
+                                    onPressed: () {
+                                      _drawerKey.currentState?.openDrawer();
+                                    },
+                                    icon: Icon(
+                                      Icons.menu,
+                                      color: themeProvider.isLightTheme
+                                          ? primaryColorDark
+                                          : white.withOpacity(0.7),
+                                    ),
+                                    color: white.withOpacity(0.7),
+                                  ),
+                                  suffixIcon: IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.search,
+                                      color: themeProvider.isLightTheme
+                                          ? primaryColorDark
+                                          : white.withOpacity(0.7),
+                                    ),
+                                  ),
+                                  hintText: 'Search your Word',
+                                  hintStyle: textStyle),
+                            ),
+                          ),
                         ),
-                        onChanged: (String text) {
-                          // if (_debounce?.isActive ?? false) _debounce.cancel();
-                          // _debounce =
-                          //     Timer(const Duration(milliseconds: 1000), () {
-                          //   _searchByFuture();
-                          //   setState(() {});
-                          // });
-                        }),
+                      ],
+                    ),
                   ),
-                ),
-              ),
-              IconButton(
-                splashColor: Colors.cyan[900],
-                onPressed: () {
-                  apiManager.searchByFuture(_controller.text);
-                  FocusScopeNode currentFocus = FocusScope.of(context);
-
-                  if (!currentFocus.hasPrimaryFocus) {
-                    currentFocus.unfocus();
-                  }
-                  setState(() {});
-                },
-                icon: const Icon(
-                  Icons.search_outlined,
-                  color: Colors.white,
                 ),
               ),
             ],
@@ -126,7 +154,7 @@ class _WordsStoreState extends State<WordsStore> {
                         direction: DismissDirection.startToEnd,
                         key: const Key('uniqueKI'),
                         background: Container(
-                          color: Theme.of(context).primaryColor,
+                          color: primaryColor,
                           child: const Padding(
                             padding: EdgeInsets.only(left: 8),
                             child: Align(
@@ -152,7 +180,9 @@ class _WordsStoreState extends State<WordsStore> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                           child: Card(
-                            color: Colors.white70,
+                            color: themeProvider.isLightTheme
+                                ? white
+                                : cardColorbgColorDark,
                             elevation: 4,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15.0),
@@ -179,10 +209,12 @@ class _WordsStoreState extends State<WordsStore> {
                                         ),
                                   title: Text(
                                     _controller.text.trim(),
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 22,
                                       fontWeight: FontWeight.w600,
-                                      color: Colors.black,
+                                      color: themeProvider.isLightTheme
+                                          ? black
+                                          : white,
                                     ),
                                   ),
                                   subtitle: Text(
@@ -314,25 +346,27 @@ class _WordsStoreState extends State<WordsStore> {
                           String? image_url = wordsData["image_url"].toString();
                           return ListBody(
                             children: [
-                              Dismissible(
-                                direction: DismissDirection.startToEnd,
-                                key: const Key('uniqueKI'),
-                                background: Container(
-                                  color: Colors.green,
-                                  child: const Text("Add to WordBokk"),
-                                ),
-                                onDismissed: (direction) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text("The word is saved"),
-                                    ),
-                                  );
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 8.0, right: 8.0),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 8.0, right: 8.0),
+                                child: Dismissible(
+                                  direction: DismissDirection.startToEnd,
+                                  key: const Key('uniqueKI'),
+                                  background: Container(
+                                    color: Colors.green,
+                                    child: const Text("Add to WordBokk"),
+                                  ),
+                                  onDismissed: (direction) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text("The word is saved"),
+                                      ),
+                                    );
+                                  },
                                   child: Card(
-                                    color: Colors.white70,
+                                    color: themeProvider.isLightTheme
+                                        ? white
+                                        : cardColorbgColorDark,
                                     elevation: 4,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(15.0),
@@ -361,10 +395,12 @@ class _WordsStoreState extends State<WordsStore> {
                                                 ),
                                           title: Text(
                                             word,
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontSize: 22,
                                               fontWeight: FontWeight.w600,
-                                              color: Colors.black,
+                                              color: themeProvider.isLightTheme
+                                                  ? black
+                                                  : white,
                                             ),
                                           ),
                                           subtitle: Text(
@@ -455,7 +491,7 @@ class _WordsStoreState extends State<WordsStore> {
                                     ),
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           );
                         },

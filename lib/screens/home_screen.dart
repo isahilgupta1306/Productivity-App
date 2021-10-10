@@ -12,6 +12,9 @@ import 'package:productivity_app/screens/notes/add_note.dart';
 import 'package:productivity_app/screens/notes/notes_screen.dart';
 import 'package:productivity_app/screens/word_store.dart';
 import 'package:productivity_app/screens/URL%20Module/url_collection.dart';
+import 'package:provider/provider.dart';
+
+import '../theme_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   int ind;
@@ -53,8 +56,10 @@ class _HomeScreenState extends State<HomeScreen> {
       const NotesScreen(),
       URLCollection(),
     ];
-
+    // Now we have access to the theme properties
+    final themeProvider = Provider.of<ThemeProvider>(context);
     var deviceSize = MediaQuery.of(context).size;
+
     return WillPopScope(
       onWillPop: () => showExitPopup(context),
       child: Scaffold(
@@ -62,8 +67,11 @@ class _HomeScreenState extends State<HomeScreen> {
         floatingActionButton: SpeedDial(
             icon: CupertinoIcons.add,
             backgroundColor: Theme.of(context).primaryColor,
+            iconTheme: IconThemeData(
+                color: themeProvider.isLightTheme ? white : black),
             children: [
               SpeedDialChild(
+                labelStyle: const TextStyle(color: black),
                 child: const Icon(Icons.link),
                 label: 'Add URL',
                 labelBackgroundColor: Colors.white70,
@@ -71,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: _modalBottomSheetMenu,
               ),
               SpeedDialChild(
+                labelStyle: const TextStyle(color: black),
                 child: const Icon(
                   CupertinoIcons.text_alignleft,
                 ),

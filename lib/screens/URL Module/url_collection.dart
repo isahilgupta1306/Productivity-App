@@ -3,11 +3,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:productivity_app/helpers/custom_colors.dart';
 import 'package:productivity_app/screens/URL%20Module/view_url.dart';
 import 'package:productivity_app/screens/home_screen.dart';
+import 'package:productivity_app/screens/notes/widgets/side_drawer.dart';
+import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../theme_provider.dart';
 
 class URLCollection extends StatefulWidget {
   String? url; //({Key? key}) : super(key: key);
@@ -18,6 +23,8 @@ class URLCollection extends StatefulWidget {
 }
 
 class _URLCollectionState extends State<URLCollection> {
+  final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+
   late StreamSubscription _intentDataStreamSubscription;
   String? _sharedText = "";
   CollectionReference ref = FirebaseFirestore.instance
@@ -59,13 +66,95 @@ class _URLCollectionState extends State<URLCollection> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final text_style = TextStyle(
+        color: themeProvider.isLightTheme
+            ? primaryColorDark
+            : white.withOpacity(0.7));
     var deviceSize = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: bgColorDark,
       appBar: AppBar(
+        toolbarHeight: deviceSize.height * 0.085,
+        title: Text(
+          'Notes',
+          style: GoogleFonts.catamaran(
+              color: primaryColor, fontSize: 35, fontWeight: FontWeight.w800),
+        ),
+        automaticallyImplyLeading: false,
         centerTitle: true,
-        title: const Text('Important URLs'),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(48.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15, bottom: 8),
+                child: Container(
+                  width: deviceSize.width * 0.85,
+                  height: 45,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: white.withOpacity(0.22)),
+                      color:
+                          themeProvider.isLightTheme ? dimWhite : bgColorDark,
+                      boxShadow: [
+                        BoxShadow(
+                            color: primaryColorDark.withOpacity(0.6),
+                            spreadRadius: 3,
+                            blurRadius: 4),
+                      ],
+                      borderRadius: BorderRadius.circular(28)),
+                  child: Padding(
+                    padding: const EdgeInsets.only(),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        //  fontSize: 15, color: white.withOpacity(0.7))
+                        SizedBox(
+                          width: deviceSize.width * 0.75,
+                          child: Center(
+                            child: TextFormField(
+                              textAlign: TextAlign.center,
+                              textInputAction: TextInputAction.search,
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  prefixIcon: IconButton(
+                                    onPressed: () {
+                                      _drawerKey.currentState?.openDrawer();
+                                    },
+                                    icon: Icon(
+                                      Icons.menu,
+                                      color: themeProvider.isLightTheme
+                                          ? primaryColorDark
+                                          : white.withOpacity(0.7),
+                                    ),
+                                    color: white.withOpacity(0.7),
+                                  ),
+                                  suffixIcon: Icon(
+                                    Icons.person_outline,
+                                    color: themeProvider.isLightTheme
+                                        ? primaryColorDark
+                                        : white.withOpacity(0.7),
+                                  ),
+                                  hintText: 'Important URLs',
+                                  hintStyle: text_style),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
+      key: _drawerKey,
+      drawer: SideDrawer('Hey there !'),
+      backgroundColor:
+          themeProvider.isLightTheme ? Colors.white54 : bgColorDark,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -79,7 +168,7 @@ class _URLCollectionState extends State<URLCollection> {
                     return RefreshIndicator(
                       onRefresh: _refresh,
                       child: StaggeredGridView.countBuilder(
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                           crossAxisCount: 2, //for column
                           crossAxisSpacing: 12,
                           mainAxisSpacing: 12,
@@ -97,11 +186,13 @@ class _URLCollectionState extends State<URLCollection> {
                                 //     const BorderRadius.all(Radius.circular(15)),
                                 onTap: () {
                                   Navigator.of(context)
-                                      .push(MaterialPageRoute(
-                                          builder: (_) => ViewURL(
-                                              snapshot
-                                                  .data!.docs[index].reference,
-                                              urlData)))
+                                      .push(
+                                    MaterialPageRoute(
+                                      builder: (_) => ViewURL(
+                                          snapshot.data!.docs[index].reference,
+                                          urlData),
+                                    ),
+                                  )
                                       .then((value) {
                                     setState(() {});
                                   });
@@ -110,7 +201,9 @@ class _URLCollectionState extends State<URLCollection> {
                                   padding: const EdgeInsets.only(
                                       left: 15, right: 15, top: 10, bottom: 10),
                                   decoration: BoxDecoration(
-                                      color: cardColorbgColorDark,
+                                      color: themeProvider.isLightTheme
+                                          ? primaryColorDark
+                                          : cardColorbgColorDark,
                                       border: Border.all(
                                           color: white.withOpacity(0.22)),
                                       borderRadius: const BorderRadius.all(
