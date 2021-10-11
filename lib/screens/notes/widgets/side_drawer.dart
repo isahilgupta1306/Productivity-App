@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:productivity_app/auth/authentication_services.dart';
 import 'package:productivity_app/helpers/custom_colors.dart';
+import 'package:productivity_app/screens/auth/login_screen.dart';
 import 'package:productivity_app/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -98,6 +99,8 @@ class _SideDrawerState extends State<SideDrawer> {
                     topRight: Radius.circular(50)),
                 onTap: () {
                   context.read<AuthenticationService>().signOut();
+                  Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (_) => const LoginScreen()));
                 },
                 splashColor: bgColorDark,
                 child: Container(

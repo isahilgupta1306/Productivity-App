@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:productivity_app/auth/authentication_services.dart';
+import 'package:productivity_app/helpers/custom_colors.dart';
+import 'package:productivity_app/helpers/fade_route.dart';
 import 'package:productivity_app/screens/home_screen.dart';
 import 'package:productivity_app/screens/auth/signup_screen.dart';
 import 'package:provider/src/provider.dart';
+
+import '../../theme_provider.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -11,11 +16,14 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
+      backgroundColor:
+          themeProvider.isLightTheme ? const Color(0xFFF6F6F6) : bgColorDark,
       body: SingleChildScrollView(
         child: Container(
-          decoration:
-              const BoxDecoration(color: Color.fromRGBO(244, 244, 244, 100)),
+          // decoration:
+          //     const BoxDecoration(color: Color.fromRGBO(244, 244, 244, 100)),
           height: deviceSize.height,
           width: deviceSize.width,
           child: Column(
@@ -31,19 +39,26 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(
                 height: 15,
               ),
-              const Text(
+              Text(
                 'Be Creative',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 45),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 45,
+                  color: themeProvider.isLightTheme
+                      ? royalBlack
+                      : white.withOpacity(0.7),
+                ),
               ),
               const SizedBox(
                 height: 10,
               ),
-              const Text(
+              Text(
                 'Login to your account',
                 style: TextStyle(
-                  fontSize: 18,
-                  color: Color.fromRGBO(89, 89, 89, 1.0),
-                ),
+                    fontSize: 18,
+                    color: themeProvider.isLightTheme
+                        ? const Color.fromRGBO(89, 89, 89, 1.0)
+                        : white.withOpacity(0.7)),
               ),
               const SizedBox(
                 height: 35,
@@ -96,6 +111,7 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     final deviceSize = MediaQuery.of(context).size;
     // ignore: avoid_unnecessary_containers
     return Container(
@@ -105,14 +121,19 @@ class _LoginFormState extends State<LoginForm> {
           SizedBox(
             width: deviceSize.width * 0.87,
             child: Container(
-              decoration: BoxDecoration(boxShadow: const [
-                // BoxShadow(
-                //   color: Colors.grey.withOpacity(0.5),
-                //   spreadRadius: 3,
-                //   blurRadius: 4,
-                //   offset: const Offset(0, 2), // changes position of shadow
-                // ),
-              ], color: Colors.white, borderRadius: BorderRadius.circular(28)),
+              decoration: BoxDecoration(
+                  boxShadow: const [
+                    // BoxShadow(
+                    //   color: Colors.grey.withOpacity(0.5),
+                    //   spreadRadius: 3,
+                    //   blurRadius: 4,
+                    //   offset: const Offset(0, 2), // changes position of shadow
+                    // ),
+                  ],
+                  color: themeProvider.isLightTheme
+                      ? Colors.white
+                      : cardColorbgColorDark,
+                  borderRadius: BorderRadius.circular(28)),
               child: TextFormField(
                 decoration: InputDecoration(
                   prefixIcon: const Icon(
@@ -155,9 +176,15 @@ class _LoginFormState extends State<LoginForm> {
             child: Container(
               decoration: BoxDecoration(
                   boxShadow: const [],
-                  color: Colors.white,
+                  color: themeProvider.isLightTheme
+                      ? Colors.white
+                      : cardColorbgColorDark,
                   borderRadius: BorderRadius.circular(28)),
               child: TextFormField(
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (val) {
+                  _login();
+                },
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.lock_outline),
                   hintText: 'Password',
@@ -209,20 +236,8 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                 ),
               ),
-              onPressed: () async {
-                String? status = await context
-                    .read<AuthenticationService>()
-                    .login(
-                        email: _emailAddressConttroller.text.trim(),
-                        password: _passwordController.text.trim());
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(status!)),
-                );
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => HomeScreen(1),
-                  ),
-                );
+              onPressed: () {
+                _login();
               },
               child: const Text('Login'),
             ),
@@ -232,14 +247,23 @@ class _LoginFormState extends State<LoginForm> {
           ),
           TextButton(
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SignupScreen()));
+              Navigator.push(context, FadeRoute(page: SignupScreen()));
             },
             child: const Text("Create an Account"),
           ),
         ],
+      ),
+    );
+  }
+
+  Future<void> _login() async {
+    String? status = await context.read<AuthenticationService>().login(
+        email: _emailAddressConttroller.text.trim(),
+        password: _passwordController.text.trim());
+    Fluttertoast.showToast(msg: status!);
+    Navigator.of(context).pushReplacement(
+      FadeRoute(
+        page: HomeScreen(1),
       ),
     );
   }

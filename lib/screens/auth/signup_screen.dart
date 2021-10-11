@@ -1,26 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:productivity_app/auth/authentication_services.dart';
+import 'package:productivity_app/helpers/custom_colors.dart';
+import 'package:productivity_app/helpers/fade_route.dart';
 import 'package:productivity_app/screens/auth/email_verification.dart';
 import 'package:productivity_app/screens/auth/login_screen.dart';
 import 'package:provider/provider.dart';
+
+import '../../theme_provider.dart';
 
 class SignupScreen extends StatelessWidget {
   const SignupScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     final deviceSize = MediaQuery.of(context).size;
+
     return Scaffold(
+      backgroundColor: themeProvider.isLightTheme ? dimWhite : bgColorDark,
       body: SingleChildScrollView(
         child: Container(
-          decoration:
-              const BoxDecoration(color: Color.fromRGBO(244, 244, 244, 100)),
+          // decoration:
+          //     const BoxDecoration(color: Color.fromRGBO(244, 244, 244, 100)),
           height: deviceSize.height,
           width: deviceSize.width,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: const <Widget>[
+            children: <Widget>[
               // SizedBox(
               //   height: 65.0,
               // ),
@@ -28,27 +35,34 @@ class SignupScreen extends StatelessWidget {
               //   'assets/signup.svg',
               //   height: deviceSize.height * 0.17,
               // ),
-              SizedBox(
+              const SizedBox(
                 height: 80,
               ),
               Text(
                 'Be Creative',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 35,
+                    color: themeProvider.isLightTheme
+                        ? royalBlack
+                        : white.withOpacity(0.7)),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 7,
               ),
               Text(
                 'Create your account',
                 style: TextStyle(
                   fontSize: 18,
-                  color: Color.fromRGBO(89, 89, 89, 1.0),
+                  color: themeProvider.isLightTheme
+                      ? const Color.fromRGBO(89, 89, 89, 1.0)
+                      : white.withOpacity(0.7),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 35,
               ),
-              SignupForm(),
+              const SignupForm(),
             ],
           ),
         ),
@@ -89,7 +103,7 @@ class _SignupFormState extends State<SignupForm> {
         .showSnackBar(SnackBar(content: Text(status!)));
     print(status);
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const EmailVerificationScreen()),
+      FadeRoute(page: const EmailVerificationScreen()),
     );
   }
 
@@ -113,7 +127,12 @@ class _SignupFormState extends State<SignupForm> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     final deviceSize = MediaQuery.of(context).size;
+    final labelStyle = TextStyle(
+        color: themeProvider.isLightTheme
+            ? Colors.grey[600]
+            : white.withOpacity(0.7));
     return SingleChildScrollView(
       child: Container(
         child: Column(
@@ -126,12 +145,16 @@ class _SignupFormState extends State<SignupForm> {
                     width: deviceSize.width * 0.87,
                     child: TextFormField(
                       decoration: InputDecoration(
-                        fillColor: Colors.white,
+                        fillColor: themeProvider.isLightTheme
+                            ? Colors.white
+                            : cardColorbgColorDark,
                         filled: true,
-                        prefixIcon: const Icon(
-                          Icons.person_outline,
-                        ),
+                        prefixIcon: Icon(Icons.person_outline,
+                            color: themeProvider.isLightTheme
+                                ? Colors.grey[600]
+                                : white.withOpacity(0.7)),
                         hintText: 'Your Name',
+                        hintStyle: labelStyle,
                         border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                             Radius.circular(28),
@@ -165,12 +188,16 @@ class _SignupFormState extends State<SignupForm> {
                     width: deviceSize.width * 0.87,
                     child: TextFormField(
                       decoration: InputDecoration(
-                        fillColor: Colors.white,
+                        fillColor: themeProvider.isLightTheme
+                            ? Colors.white
+                            : cardColorbgColorDark,
                         filled: true,
-                        prefixIcon: const Icon(
-                          Icons.email_outlined,
-                        ),
+                        prefixIcon: Icon(Icons.email_outlined,
+                            color: themeProvider.isLightTheme
+                                ? Colors.grey[600]
+                                : white.withOpacity(0.7)),
                         hintText: 'E-Mail',
+                        hintStyle: labelStyle,
                         border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                             Radius.circular(28),
@@ -204,10 +231,16 @@ class _SignupFormState extends State<SignupForm> {
                     width: deviceSize.width * 0.87,
                     child: TextFormField(
                       decoration: InputDecoration(
-                        fillColor: Colors.white,
+                        fillColor: themeProvider.isLightTheme
+                            ? Colors.white
+                            : cardColorbgColorDark,
                         filled: true,
-                        prefixIcon: Icon(Icons.lock_outline),
+                        prefixIcon: Icon(Icons.lock_outline,
+                            color: themeProvider.isLightTheme
+                                ? Colors.grey[600]
+                                : white.withOpacity(0.7)),
                         hintText: 'Password',
+                        hintStyle: labelStyle,
                         border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                             Radius.circular(28),
@@ -223,8 +256,14 @@ class _SignupFormState extends State<SignupForm> {
                         ),
                         suffixIcon: IconButton(
                           icon: _obscureText
-                              ? const Icon(Icons.visibility)
-                              : const Icon(Icons.visibility_off),
+                              ? Icon(Icons.visibility,
+                                  color: themeProvider.isLightTheme
+                                      ? Colors.grey[600]
+                                      : white.withOpacity(0.7))
+                              : Icon(Icons.visibility_off,
+                                  color: themeProvider.isLightTheme
+                                      ? Colors.grey[600]
+                                      : white.withOpacity(0.7)),
                           onPressed: _toggle,
                         ),
                       ),
@@ -248,10 +287,18 @@ class _SignupFormState extends State<SignupForm> {
                     width: deviceSize.width * 0.87,
                     child: TextFormField(
                       decoration: InputDecoration(
-                        fillColor: Colors.white,
+                        fillColor: themeProvider.isLightTheme
+                            ? Colors.white
+                            : cardColorbgColorDark,
                         filled: true,
-                        prefixIcon: Icon(Icons.lock_outline),
+                        prefixIcon: Icon(
+                          Icons.lock_outline,
+                          color: themeProvider.isLightTheme
+                              ? Colors.grey[600]
+                              : white.withOpacity(0.7),
+                        ),
                         hintText: 'Confirm Password',
+                        hintStyle: labelStyle,
                         border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                             Radius.circular(28),
@@ -318,9 +365,11 @@ class _SignupFormState extends State<SignupForm> {
             TextButton(
               onPressed: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const LoginScreen()));
+                  context,
+                  FadeRoute(
+                    page: const LoginScreen(),
+                  ),
+                );
               },
               child: const Text("Already have an Account ? Click here"),
             ),
