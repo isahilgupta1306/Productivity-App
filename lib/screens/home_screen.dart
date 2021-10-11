@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:productivity_app/helpers/custom_colors.dart';
@@ -39,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    ;
     _currentIndex = widget.ind;
   }
 
@@ -53,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final List<Widget> _children = [
       const WordsStore(),
-      const NotesScreen(),
+      NotesScreen(),
       URLCollection(),
     ];
     // Now we have access to the theme properties
@@ -117,6 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
               label: 'URLs',
             ),
           ],
+
           onTap: _selectPage,
           currentIndex:
               _currentIndex, // this will be set when a new tab is tapped

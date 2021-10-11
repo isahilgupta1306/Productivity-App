@@ -1,4 +1,6 @@
 import 'dart:async';
+
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +78,7 @@ class _URLCollectionState extends State<URLCollection> {
       appBar: AppBar(
         toolbarHeight: deviceSize.height * 0.085,
         title: Text(
-          'Notes',
+          'Important URLs',
           style: GoogleFonts.catamaran(
               color: primaryColor, fontSize: 35, fontWeight: FontWeight.w800),
         ),
@@ -197,58 +199,71 @@ class _URLCollectionState extends State<URLCollection> {
                                     setState(() {});
                                   });
                                 },
-                                child: Container(
-                                  padding: const EdgeInsets.only(
-                                      left: 15, right: 15, top: 10, bottom: 10),
-                                  decoration: BoxDecoration(
-                                      color: themeProvider.isLightTheme
-                                          ? primaryColorDark
-                                          : cardColorbgColorDark,
-                                      border: Border.all(
-                                          color: white.withOpacity(0.22)),
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(15))),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Center(
-                                        child: Text(
-                                          title,
-                                          textAlign: TextAlign.center,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              color: white.withOpacity(0.9),
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      ),
-                                      Divider(
-                                        color: white.withOpacity(0.22),
-                                        indent: 10,
-                                        endIndent: 10,
-                                      ),
-                                      Material(
-                                        color: Colors.transparent,
-                                        child: InkWell(
-                                          splashColor:
-                                              Theme.of(context).primaryColor,
-                                          onTap: () => _launchInBrowser(url),
+                                child: Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.only(
+                                        left: 15,
+                                        right: 15,
+                                        top: 10,
+                                        bottom: 10),
+                                    decoration: BoxDecoration(
+                                        color: themeProvider.isLightTheme
+                                            ? primaryColorDark
+                                            : cardColorbgColorDark,
+                                        border: Border.all(
+                                            color: white.withOpacity(0.22)),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(15))),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Center(
                                           child: Text(
-                                            url,
-                                            overflow: TextOverflow.ellipsis,
+                                            title,
                                             textAlign: TextAlign.center,
-                                            maxLines: 3,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
                                             style: TextStyle(
-                                                fontSize: 13,
-                                                height: 1.5,
-                                                color: white.withOpacity(0.7),
-                                                fontWeight: FontWeight.w400),
+                                                fontSize: 15,
+                                                color: white.withOpacity(0.9),
+                                                fontWeight: FontWeight.w500),
                                           ),
                                         ),
-                                      )
-                                    ],
+                                        Divider(
+                                          color: white.withOpacity(0.22),
+                                          indent: 10,
+                                          endIndent: 10,
+                                        ),
+                                        Material(
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                            splashColor:
+                                                Theme.of(context).primaryColor,
+                                            onTap: () => _launchInBrowser(url),
+                                            child: Text(
+                                              url,
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.center,
+                                              maxLines: 3,
+                                              style: TextStyle(
+                                                  fontSize: 13,
+                                                  height: 1.5,
+                                                  color: white.withOpacity(0.7),
+                                                  fontWeight: FontWeight.w400),
+                                            ),
+                                          ),
+                                        ),
+
+                                        // SimpleUrlPreview(
+                                        //   url: url,
+                                        //   previewHeight: 130,
+                                        //   previewContainerPadding:
+                                        //       EdgeInsets.all(5),
+                                        //   isClosable: true,
+                                        // ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),

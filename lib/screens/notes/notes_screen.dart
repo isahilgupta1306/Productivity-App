@@ -17,7 +17,7 @@ import 'package:provider/provider.dart';
 import '../../theme_provider.dart';
 
 class NotesScreen extends StatefulWidget {
-  const NotesScreen({Key? key}) : super(key: key);
+  NotesScreen({Key? key}) : super(key: key);
 
   @override
   _NotesScreenState createState() => _NotesScreenState();
